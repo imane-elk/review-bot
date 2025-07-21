@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from reviewer import review_code
+from reviewer import review_code_langchain
 
 app = Flask(__name__)
 
@@ -13,7 +13,8 @@ def review():
     if not diff:
         return jsonify({"error": "Missing diff"}), 400
 
-    review_result = review_code(title, body, diff)
+    # ⚠️ Appel direct à LangChain
+    review_result = review_code_langchain(title, body, diff)
     return jsonify({"review": review_result})
 
 if __name__ == '__main__':

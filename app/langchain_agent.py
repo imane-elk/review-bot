@@ -19,19 +19,30 @@ Code diff:
 {diff}
 
 Your task:
-- Provide a clear and structured review: What is good, what is bad, and why.
-- If there are any problems, **suggest a corrected version or a refactored snippet**.
-- Be brief but helpful.
-Format your answer with clear sections: Good, Bad, Suggestions, and Example Fix (if applicable).
+- Perform an in-depth analysis of the code: explain what is good, what could be improved, and why.
+- Check if there is any **dead code** (code that will never run, is unused, or redundant). If yes, clearly explain why and suggest removing it.
+- Pay attention to:
+    - Code structure
+    - Naming conventions
+    - Separation of concerns
+    - Class structure and dependencies (if any)
+    - Respect of programming language or framework best practices
+- If problems exist, suggest corrected or refactored code snippets with detailed justification.
+- Always justify every point with examples when possible.
+
+Format your answer in English with clear sections:
+- ✅ Strengths (with justification)
+- ❌ Weaknesses (with explanation)
+- 💡 Suggestions for improvement
+- 🧹 Dead Code (if detected, explain why)
+- 🛠️ Refactored Code (if applicable)
 """
+
 )
-
-
-# Crée le LLM Gemini avec clé manuelle
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-1.5-flash",
     temperature=0.5,
-    google_api_key=os.getenv("GOOGLE_API_KEY")  # ✅ important
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 def review_with_langchain(title, body, diff):
