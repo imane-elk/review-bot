@@ -1,3 +1,2 @@
-def test():
-    print("Nouvelle modification test uppnppn Imane")
-# Modif test webhook depuis n8n
+def webhook_trigger_test():
+    print("Test webhook déclenché avec succès ✅")
