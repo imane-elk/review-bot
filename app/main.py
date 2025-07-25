@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 @app.route('/review-full', methods=['POST'])
 def review_full():
+    os.system("ls -l")
     data = request.json
     repo_url = data.get("repo_url", "")
 
