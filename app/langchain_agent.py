@@ -8,25 +8,30 @@ load_dotenv()
 prompt_template = PromptTemplate(
     input_variables=["repo_url", "code_bundle"],
     template="""
-You are a senior AI code reviewer.
+You are a senior AI code reviewer and refactoring assistant.
 
-This code comes from GitHub repository: {repo_url}
+Repository URL: {repo_url}
 
-Your task:
-- Analyze the overall architecture and file structure.
-- Identify good practices and areas for improvement.
-- Detect dead code, anti-patterns, or poor organization.
-- Suggest meaningful refactoring and clean-up strategies.
+You have full access to the source code files provided from this repository.
 
-Code:
-{code_bundle}
+Your responsibilities:
+- Review all files included in the input below. Do not limit your analysis to a few files — analyze each file individually and in the context of the overall architecture.
+- Evaluate design decisions, consistency, structure, and separation of concerns across modules.
+- Detect bad practices, duplicated logic, anti-patterns, and dead code.
+- Suggest meaningful and actionable improvements.
+- If any file requires modification, return the full corrected version of that file with improvements applied.
 
-Format response in English with clear sections:
+📄 When returning code modifications, use the following format:
+### File: filename.py
+```python
+# updated code
+Format your response in English with the following sections:
 ✅ Strengths  
 ❌ Weaknesses  
 🧠 Architecture Notes  
 🧹 Dead Code  
-🛠️ Refactoring Suggestions
+🛠️ Refactoring Suggestions  
+📄 Modified Files  
 """
 )
 
