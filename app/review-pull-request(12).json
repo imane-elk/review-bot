@@ -1,0 +1,320 @@
+{
+  "name": "review-pull-request",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "github-review",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        -180
+      ],
+      "id": "2028f506-9484-4f96-971c-eecc237e8b77",
+      "name": "Webhook",
+      "webhookId": "3916d3a3-70eb-468f-b6ec-22ad11141606"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c71a6d77-831a-47b6-9b57-012812eb4ddf",
+              "name": "repo_url",
+              "value": "={{ $json.body.pull_request.head.repo.html_url }}",
+              "type": "string"
+            },
+            {
+              "id": "40924afd-3bb8-452f-90a9-b3893a1d522e",
+              "name": "pr_number",
+              "value": "={{ $json.body.pull_request.number }}",
+              "type": "string"
+            },
+            {
+              "id": "ed39ec40-7869-4732-a47e-05c1b34bb0bf",
+              "name": "pr_title",
+              "value": "={{ $json.body.pull_request.title }}",
+              "type": "string"
+            },
+            {
+              "id": "36d3fa66-869a-40a5-930b-cc5c4c44f5eb",
+              "name": "pr_body",
+              "value": "={{ $json.body }}",
+              "type": "string"
+            },
+            {
+              "id": "46312824-bf2d-4eab-915f-5ebe24f1115c",
+              "name": "head_sha",
+              "value": "= {{ $json.body.pull_request.head.sha }}",
+              "type": "string"
+            },
+            {
+              "id": "0f733633-c93e-4cba-acd9-d6081065c6e2",
+              "name": "base_sha",
+              "value": "={{ $json.body.pull_request.base.sha }}",
+              "type": "string"
+            },
+            {
+              "id": "f1b2baa9-dc3e-4b79-8918-385f474a572c",
+              "name": "repo_owner",
+              "value": "={{ $json.body.pull_request.head.repo.owner.login }}",
+              "type": "string"
+            },
+            {
+              "id": "b48f84ff-dee5-40b9-996c-0e1f3d41ea8f",
+              "name": "repo_name",
+              "value": "={{ $json.body.pull_request.head.repo.name }}",
+              "type": "string"
+            },
+            {
+              "id": "00748b81-8e73-4949-9285-7dcbaac86355",
+              "name": "pr_url",
+              "value": "={{ $json.body.pull_request.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        20,
+        -180
+      ],
+      "id": "5a1d9666-7d44-4e22-893b-3e07e5293478",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5001/review-full",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "repo_url",
+              "value": "={{ $json.repo_url }}"
+            },
+            {
+              "name": "pr_number",
+              "value": "={{ $json.pr_number }}"
+            },
+            {
+              "name": "pr_title",
+              "value": "={{ $json.pr_title }}"
+            },
+            {
+              "name": "pr_body",
+              "value": "={{ $json.pr_body }}"
+            },
+            {
+              "name": "head_sha",
+              "value": "={{ $json.head_sha }}"
+            },
+            {
+              "name": "base_sha",
+              "value": "={{ $json.base_sha }}"
+            },
+            {
+              "name": "repo_owner",
+              "value": "={{ $json.repo_owner }}"
+            },
+            {
+              "name": "repo_name",
+              "value": "={{ $json.repo_name }}"
+            },
+            {
+              "name": "pr_url",
+              "value": "={{ $json.pr_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        -180
+      ],
+      "id": "faf8f204-a3d3-4ac4-8531-441777c90c8e",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8b083952-3609-4e64-96f5-fbc32de0b06f",
+              "name": "review_obj",
+              "value": "={{ $json.comment }}",
+              "type": "string"
+            },
+            {
+              "id": "402840b9-3d77-4d99-94a8-6627f15ad031",
+              "name": "modified_files",
+              "value": "={{ $json.modified_files }}",
+              "type": "string"
+            },
+            {
+              "id": "a0a84e92-67b8-43be-a236-bad8332de614",
+              "name": "pdf_url",
+              "value": "={{ $json.pdf_report_url }}",
+              "type": "string"
+            },
+            {
+              "id": "3db75c90-e42d-43ee-91db-3384edd61d9e",
+              "name": "pr_number",
+              "value": "={{ $json.pr_number }}",
+              "type": "string"
+            },
+            {
+              "id": "6913c924-e4e0-4d35-9ee6-b34e7ac796cf",
+              "name": "repo_name",
+              "value": "={{ $('Webhook').item.json.body.repository.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c4fa0e00-23e2-47dd-bb00-adb356bae76e",
+              "name": "repo_owner",
+              "value": "={{ $('Webhook').item.json.body.repository.owner.login }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        -180
+      ],
+      "id": "fb690a35-c4ab-4724-9857-11b4908e72b9",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.github.com/repos/{{ $json.repo_owner }}/{{ $json.repo_name }}/issues/{{ $json.pr_number }}/comments",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "body",
+              "value": "={{ $json.comment }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        840,
+        -160
+      ],
+      "id": "f0f13006-6eaa-4475-ad77-35895700ea2b",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "UBR9RobLy3Ff757J",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n    // 1️ Récupérer le texte de review depuis le champ existant\n    let reviewText = item.json.comment || item.json.review_obj || \"\";\n\n    if (!reviewText) {\n        return { json: { comment: \"Erreur : Aucun texte de review trouvé\" } };\n    }\n\n    // 2️ Construire le commentaire à poster\n    const commentaire = reviewText;\n\n    // 3️ Nettoyer pr_number\n    const prNumber = (item.json.pr_number || \"\").trim();\n\n    // 4️ Retourner un objet propre pour HTTP Request\n    return {\n        json: {\n            repo_owner: item.json.repo_owner,\n            repo_name: item.json.repo_name,\n            pr_number: prNumber,\n            comment: commentaire\n        }\n    };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -160
+      ],
+      "id": "8f8a2e7e-4702-452e-b177-4a250a2e08b3",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        []
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4ef62a89-f6cb-4af3-a2aa-2d1413b32c7c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ebf4e36729706305e733ed91c485986ba859ddf401ee2ef8ac5e9edc7c5c28d7"
+  },
+  "id": "3gG83bHhP9IUwhlM",
+  "tags": []
+}
