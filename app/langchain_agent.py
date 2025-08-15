@@ -1,46 +1,46 @@
 import os
-from dotenv import load_dotenv
-from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-
+from langchain.prompts import PromptTemplate
+from dotenv import load_dotenv
 load_dotenv()
 
-prompt_template = PromptTemplate(
-    input_variables=["repo_url", "code_bundle"],
-    template="""
-You are a senior AI code reviewer and refactoring assistant.
+# Récupération clé API Google
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
-Repository URL: {repo_url}
+if not GOOGLE_API_KEY:
+    raise ValueError("❌ La clé GOOGLE_API_KEY est manquante. Définis-la avant de lancer le script.")
 
-You have full access to the source code files provided from this repository.
-
-Your responsibilities:
-- Review all files included in the input below. Do not limit your analysis to a few files — analyze each file individually and in the context of the overall architecture.
-- Evaluate design decisions, consistency, structure, and separation of concerns across modules.
-- Detect bad practices, duplicated logic, anti-patterns, and dead code.
-- Suggest meaningful and actionable improvements.
-- If any file requires modification, return the full corrected version of that file with improvements applied.
-
-📄 When returning code modifications, use the following format:
-### File: filename.py
-```python
-# updated code
-Format your response in English with the following sections:
-✅ Strengths  
-❌ Weaknesses  
-🧠 Architecture Notes  
-🧹 Dead Code  
-🛠️ Refactoring Suggestions  
-📄 Modified Files  
-"""
-)
-
+# Initialisation du modèle Gemini
 llm = ChatGoogleGenerativeAI(
     model="gemini-1.5-flash",
     temperature=0.5,
-    google_api_key=os.getenv("GOOGLE_API_KEY")
+    google_api_key=GOOGLE_API_KEY
 )
 
-def review_full_repo_langchain(repo_url, code_bundle):
-    prompt = prompt_template.format(repo_url=repo_url, code_bundle=code_bundle)
-    return llm.invoke(prompt).content
+def review_full_repo_langchain(repo_url: str) -> str:
+    """
+    Analyse complète d’un repository GitHub via Gemini.
+    """
+    print(f"🔍 Analyse du repo : {repo_url}")
+
+    prompt_template = PromptTemplate(
+        input_variables=["repo_url"],
+        template="""
+Tu es un expert en revue de code.
+Analyse le repository suivant : {repo_url}
+
+Fournis un rapport clair avec :
+- Évaluation générale
+- Points forts
+- Problèmes détectés
+- Améliorations suggérées
+        """
+    )
+
+    try:
+        prompt = prompt_template.format(repo_url=repo_url)
+        response = llm.invoke(prompt)
+        return response.content.strip()
+    except Exception as e:
+        print("❌ Erreur pendant l'appel LLM :", str(e))
+        return "⚠ La génération de la review a échoué ou est vide."
