@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain_agent import review_with_langchain
-
+#useless comment
 # Charger la clé API depuis le fichier .env
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
