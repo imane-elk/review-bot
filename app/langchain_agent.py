@@ -5,35 +5,37 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
-# Crée le prompt
 prompt_template = PromptTemplate(
-    input_variables=["title", "body", "diff"],
+    input_variables=["repo_url", "code_bundle"],
     template="""
 You are a senior AI code reviewer.
 
-Here is a GitHub Pull Request to review:
-
-Title: {title}
-Description: {body}
-Code diff:
-{diff}
+This code comes from GitHub repository: {repo_url}
 
 Your task:
-- Provide a clear and structured review: What is good, what is bad, and why.
-- If there are any problems, **suggest a corrected version or a refactored snippet**.
-- Be brief but helpful.
-Format your answer with clear sections: Good, Bad, Suggestions, and Example Fix (if applicable).
+- Analyze the overall architecture and file structure.
+- Identify good practices and areas for improvement.
+- Detect dead code, anti-patterns, or poor organization.
+- Suggest meaningful refactoring and clean-up strategies.
+
+Code:
+{code_bundle}
+
+Format response in English with clear sections:
+✅ Strengths  
+❌ Weaknesses  
+🧠 Architecture Notes  
+🧹 Dead Code  
+🛠️ Refactoring Suggestions
 """
 )
 
-
-# Crée le LLM Gemini avec clé manuelle
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-pro",
+    model="gemini-1.5-flash",
     temperature=0.5,
-    google_api_key=os.getenv("GOOGLE_API_KEY")  # ✅ important
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
-def review_with_langchain(title, body, diff):
-    final_prompt = prompt_template.format(title=title, body=body, diff=diff)
-    return llm.invoke(final_prompt).content
+def review_full_repo_langchain(repo_url, code_bundle):
+    prompt = prompt_template.format(repo_url=repo_url, code_bundle=code_bundle)
+    return llm.invoke(prompt).content
